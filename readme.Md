@@ -16,12 +16,14 @@
 ## 运行
 
 主函数入口:
-```java com.mispower.autoops.automonitor.AutoOps
+```java 
+ com.mispower.autoops.automonitor.AutoOps
 ```
 
 配置接入的Cloudera集群文件:cloudera.properties
 
-```xml webUrl=10.10.11.11
+```xml 
+webUrl=10.10.11.11
 webPort=7180
 loginName=admin
 loginPwd=!qaz@wsx
