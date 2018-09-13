@@ -3,6 +3,8 @@ package com.mispower.autoops.automonitor;
 import com.mispower.autoops.cloudera.IClusterManager;
 import com.mispower.autoops.cloudera.IServiceManager;
 import com.mispower.autoops.cloudera.imp.ClusterManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AutoOps {
 
-
+    private final static Logger LOGGER = LoggerFactory.getLogger(AutoOps.class);
     protected static final AtomicBoolean isClosed = new AtomicBoolean(false);
 
     public AutoOps() {
@@ -46,7 +48,7 @@ public class AutoOps {
                     }
                 }
             } catch (Throwable e) {
-                e.printStackTrace();
+               LOGGER.info(e.getMessage());
             } finally {
                 if (iClusterManager != null) {
                     iClusterManager.clean();
