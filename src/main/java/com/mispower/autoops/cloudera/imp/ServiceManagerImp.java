@@ -6,8 +6,6 @@ import com.cloudera.api.v11.RolesResourceV11;
 import com.cloudera.api.v11.ServicesResourceV11;
 import com.mispower.autoops.cloudera.IServiceManager;
 import com.mispower.autoops.cloudera.initial.InitApiRootResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +20,6 @@ import java.util.function.Consumer;
  */
 public class ServiceManagerImp implements IServiceManager {
 
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ServiceManagerImp.class);
 
     private String serviceName;
     private ApiRoleNameList apiRoleNameList;
@@ -124,9 +120,9 @@ public class ServiceManagerImp implements IServiceManager {
                         apiCommand = InitApiRootResource.getInstance().readCommand(apiCommand.getId());
                         Thread.sleep(50);
                     }
-                    LOGGER.info(apiCommand.toString());
+
                 } catch (Throwable ex) {
-                    LOGGER.error("Error while executing callback function:", ex);
+                    ex.printStackTrace();
                 }
             }
         });
