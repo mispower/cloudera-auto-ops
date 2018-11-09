@@ -5,6 +5,8 @@ import com.cloudera.api.model.ApiRoleNameList;
 import com.cloudera.api.v10.RoleCommandsResourceV10;
 import com.cloudera.api.v11.RolesResourceV11;
 
+import java.util.List;
+
 /**
  * 集群服务管理器
  *
@@ -48,6 +50,13 @@ public interface IServiceManager {
      * @return
      */
     ApiRoleNameList getApiRoleListUnhealthy();
+
+    /**
+     * 获取不健康的角色对应的主机列表
+     *
+     * @return
+     */
+    List<String> getApiHostNameListUnhealthy();
 
     /**
      * 当前服务下需要重启的角色

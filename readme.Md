@@ -11,6 +11,12 @@
 
 需要Java 8+版本
 
+运行节点需要安装sshpass
+
+```command
+yum install sshpass
+```
+
 依赖[Cloudera Manager API](https://www.cloudera.com/documentation/enterprise/latest.html)
 
 ## 运行

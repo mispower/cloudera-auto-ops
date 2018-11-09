@@ -1,6 +1,7 @@
 package com.mispower.autoops.cloudera.initial;
 
 import com.cloudera.api.model.ApiCommand;
+import com.cloudera.api.v10.HostsResourceV10;
 import com.mispower.autoops.conf.Environments;
 import com.cloudera.api.ApiRootResource;
 import com.cloudera.api.ClouderaManagerClientBuilder;
@@ -73,6 +74,14 @@ public class InitApiRootResource {
         return getRootResource().getClustersResource();
     }
 
+    /**
+     * 获取所有主机信息
+     *
+     * @return
+     */
+    public HostsResourceV10 getHostsResource() {
+        return getRootResource().getHostsResource();
+    }
 
     /**
      * 回调ApiCommand
@@ -107,7 +116,7 @@ public class InitApiRootResource {
                     }
                 }
             }
-           // System.gc();
+            // System.gc();
         }
     }
 }
