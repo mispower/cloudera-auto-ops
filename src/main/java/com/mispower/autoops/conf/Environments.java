@@ -20,14 +20,15 @@ public class Environments {
     public static String CLUSTER_NAME = "Cluster 1";
     public static List<String> SERVICE_NAME_LIST = new ArrayList<String>();
     public static String DEFAULT_SERVICE_NAME = "hbase";
+    private static Properties properties = null;
 
     /**
      * 加载默认参数
      */
     static {
-        Properties properties = null;
         try {
             properties = FileUtil.autoReadProperties("cloudera.properties");
+            properties.putAll(FileUtil.autoReadProperties("hosts.properties"));
             CDH_WEB_URL = properties.getProperty("webUrl", CDH_WEB_URL);
             CDH_WEB_PORT = properties.getProperty("webPort", CDH_WEB_PORT);
             LOGIN_NAME = properties.getProperty("loginName", LOGIN_NAME);
@@ -43,5 +44,8 @@ public class Environments {
         }
     }
 
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
+    }
 
 }

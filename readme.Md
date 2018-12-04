@@ -26,7 +26,9 @@ yum install sshpass
  com.mispower.autoops.automonitor.AutoOps
 ```
 
-配置接入的Cloudera集群文件:cloudera.properties
+配置接入的Cloudera集群文件:
+
+cloudera.properties：
 
 ```xml 
 webUrl=10.10.11.11
@@ -36,6 +38,7 @@ loginPwd=!qaz@wsx
 clusterName=Cluster 1
 serviceName=hbase,hdfs,kafka
 ```
+
 
 |参数名|描述|
 |-|-|
@@ -47,6 +50,22 @@ serviceName=hbase,hdfs,kafka
 |serviceName|组件服务名|
 
 其中主要是serviceName设置，加入想要监控的组件服务名称就可以了，比如Hbase、Hdfs、Kafka.等
+
+
+hosts.properties：
+
+```xml 
+admin=1qaz2wsx
+data1=1qaz2wsx
+data2=1qaz2wsx
+data3=1qaz2wsx
+```
+
+|参数名|描述|
+|-|-|
+|主机名|各监控节点主机名|
+
+该文件主要配置各节点主机名和对应的登陆密码。
 
 Maven编译jar包后，运行
 ```bash

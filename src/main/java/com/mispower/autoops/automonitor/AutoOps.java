@@ -3,6 +3,7 @@ package com.mispower.autoops.automonitor;
 import com.mispower.autoops.cloudera.IClusterManager;
 import com.mispower.autoops.cloudera.IServiceManager;
 import com.mispower.autoops.cloudera.imp.ClusterManager;
+import com.mispower.autoops.conf.Environments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,45 +17,41 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 自动运维入口
  *
- * @author
+ * @author wuguolin
  */
 public class AutoOps {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AutoOps.class);
-    protected static final AtomicBoolean isClosed = new AtomicBoolean(false);
+    private static final AtomicBoolean IS_CLOSED = new AtomicBoolean(false);
 
     /**
      * 检测异常，次数阈值
      */
-    private final long times = 3;
+    private static final long TIMES = 3;
     /**
      * 检测异常，时间阈值:15 Mins
      */
-    private static final long detectInterval = 900000;
+    private static final long DETECT_INTERVAL = 900000;
 
     private static long firstTime = System.currentTimeMillis();
 
     private static volatile Map<String, AtomicInteger> cache = new HashMap<>();
 
-    private static final String ADDRESS = "sshpass -p1qaz2wsx ssh %s -oStrictHostKeyChecking=no /etc/init.d/cloudera-scm-agent restart";
+    private static final String ADDRESS = "sshpass -p%s ssh %s -oStrictHostKeyChecking=no /etc/init.d/cloudera-scm-agent restart";
 
     public AutoOps() {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                isClosed.set(true);
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> IS_CLOSED.set(true)));
     }
 
     /**
      * 运行主函数入口
      *
-     * @param args
+     * @param args 参数
      */
-    public void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        while (!isClosed.get()) {
+
+        while (!IS_CLOSED.get()) {
             IClusterManager iClusterManager = null;
             try {
                 iClusterManager = new ClusterManager();
@@ -80,22 +77,22 @@ public class AutoOps {
                 iClusterManager.clean();
 
                 long duration = System.currentTimeMillis() - firstTime;
-                if (duration > detectInterval) {
+                if (duration > DETECT_INTERVAL) {
                     cache.clear();
                     firstTime = System.currentTimeMillis();
                 } else {
-                    if (duration <= detectInterval) {
+                    if (duration <= DETECT_INTERVAL) {
                         cache.forEach((s, atomicInteger) -> {
-                            if (times <= atomicInteger.get()) {
-                                final String address = String.format(ADDRESS, s.split(",")[0]);
+                            if (TIMES <= atomicInteger.get()) {
+                                final String hostName = s.split(",")[0];
+
+                                final String address = String.format(ADDRESS, Environments.getProperty(hostName), hostName);
                                 cache.get(s).set(0);
                                 try {
                                     int value = Runtime.getRuntime().exec(address).waitFor();
                                     LOGGER.info(String.format("Invoke shell return value:%s .Shell command: %s",
                                             value, address));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
+                                } catch (IOException | InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
